@@ -4,30 +4,38 @@
 # Maintainer: Pellegrino Prevete (tallero) <pellegrinoprevete@gmail.com>
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 
-pkgname=python-idna
+_py='python'
+_pkg=idna
+pkgname="${_py}-${_pkg}"
 pkgver=3.6
 pkgrel=1
-pkgdesc="Internationalized Domain Names in Applications (IDNA)"
+_pkgdesc=(
+  "Internationalized Domain Names"
+  "in Applications (IDNA)"
+)
+pkgdesc="${_pkgdesc[*]}"
 arch=(
   'any'
 )
 license=(
   'BSD'
 )
-url="https://github.com/kjd/idna"
+_http="https://github.com"
+_ns="kjd"
+url="${_http}/${_ns}/${_pkg}"
 depends=(
-  'python'
+  "${_py}"
 )
-makedepends=('
-  python-build'
-  'python-installer'
-  'python-flit-core'
+makedepends=(
+  "${_py}-build"
+  "${_py}-installer"
+  "${_py}-flit-core"
 )
 checkdepends=(
-  'python-pytest'
+  "${_py}-pytest"
 )
 source=(
-  "https://github.com/kjd/idna/archive/v$pkgver/$pkgname-$pkgver.tar.gz"
+  "${url}/archive/v${pkgver}/${pkgname}-${pkgver}.tar.gz"
 )
 sha512sums=(
   '4ffadae74aa69529cd37a6d361564b2a11450af6aa15f6691ba668139f4efe2893361c0fe7bf8e0d8ebcba1dc8937d50a3dfb3782905f1e1983d01455dced1ff'
@@ -35,8 +43,8 @@ sha512sums=(
 
 build() {
   cd \
-    idna-$pkgver
-  python \
+    "${_pkg}-${pkgver}"
+  "${_py}" \
     -m build \
     --no-isolation \
     --wheel
@@ -44,21 +52,22 @@ build() {
 
 check() {
   cd \
-    idna-$pkgver
+    "${_pkg}-${pkgver}"
   pytest
 }
 
 package() {
   cd \
-    idna-$pkgver
-  python \
-    -m installer \
+    "${_pkg}-${pkgver}"
+  "${_py}" \
+    -m \
+      installer \
     --destdir="${pkgdir}" \
     dist/*.whl
   install \
     -Dm644 \
     LICENSE.md \
     -t \
-    "$pkgdir"/usr/share/licenses/$pkgname/
+    "${pkgdir}"/usr/share/licenses/${pkgname}/
 }
 

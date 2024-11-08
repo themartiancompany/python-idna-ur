@@ -4,7 +4,16 @@
 # Maintainer: Pellegrino Prevete (tallero) <pellegrinoprevete@gmail.com>
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 
-_py='python'
+_py="python"
+_pyver="$( \
+  "${_py}" \
+    -V | \
+    awk \
+      '{print $2}')"
+_pymajver="${_pyver%.*}"
+_pyminver="${_pymajver#*.}"
+_pynextver="${_pymajver%.*}.$(( \
+  ${_pyminver} + 1))"
 _pkg=idna
 pkgname="${_py}-${_pkg}"
 pkgver=3.6
@@ -24,7 +33,8 @@ _http="https://github.com"
 _ns="kjd"
 url="${_http}/${_ns}/${_pkg}"
 depends=(
-  "${_py}"
+  "${_py}>=${_pymajver}"
+  "${_py}<${_pynextver}"
 )
 makedepends=(
   "${_py}-build"
